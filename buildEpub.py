@@ -3,7 +3,6 @@
 import sys,os
 from jinja2 import Template
 from jinja2 import Environment,PackageLoader
-import chardet
 reload(sys)
 sys.setdefaultencoding('utf-8')
 usage = \
