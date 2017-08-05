@@ -3,10 +3,11 @@
 cateFormatLines = []
 class Category:
 	global cateFormatLines 
-	def __init__(self,title = 'category',level=0):
+	def __init__(self,title = 'category',level=-1): #-1 as top category
 		self.title  = title
 		self.level = level
 		self.subCategory = []
+		self.hasSub = False
 		
 	def setTitle(self,title):
 		self.title = title
@@ -15,12 +16,16 @@ class Category:
 	def getLevel(self,level):
 		return self.level
 
+	def hasSubCate(self):
+		return self.hasSub
+
 	def updateLevel(self,topLevel):
 		self.level = topLevel
 		for subcate in self.subCategory:
 			subcate.updateLevel(topLevel + 1)
 
 	def addSubCate(self,cate):
+		self.hasSub = True
 		cate.updateLevel(self.level + 1)
 		self.subCategory.append(cate)
 
@@ -36,26 +41,28 @@ class Category:
 			for cate in self.subCategory:
 				print cate.title
 
-	def geneCateLines(self,n=0):
-		level=''
-		if(n!=0):
-			for i in range(n):
-				level += '\t'
-		cateFormatLines.append(level+self.title)
-		if(len(self.subCategory)!=0):
+	def geneCateLines(self):
+		prefix=''
+		if(self.level!=0):
+			for i in range(self.level):
+				prefix += '\t'
+		if(self.level >= 0):
+			cateFormatLines.append(prefix+self.title)
+		if(self.hasSubCate()):
 			for cate in self.subCategory:
-				cate.geneCateLines(n+1)
+				cate.geneCateLines()
 
-	def printCate(self,n=0):
-		level=''
-		if(n!=0):
-			for i in range(n):
-				level += '\t'
-		print level,self.title
-		if(len(self.subCategory)!=0):
-			n+=1
+	def printCate(self):
+		prefix=''
+		if(self.level>0):
+			for i in range(self.level):
+				prefix += '\t'
+			print prefix,self.title
+		if(self.level==0) :
+			print self.title
+		if(self.hasSubCate()):
 			for cate in self.subCategory:
-				cate.printCate(n)
+				cate.printCate()
 	
 	def write2file(self,outpath):
 		global cateFormatLines
@@ -63,7 +70,7 @@ class Category:
 		self.geneCateLines() # reformat cate lines
 		outfile = open(outpath,'w')
 		for line in cateFormatLines:
-			print line
+			#print line
 			outfile.write(line+'\n')
 		outfile.close()
 
@@ -106,13 +113,10 @@ def test():
 		c1.addSubCate(c12)
 		c11.addSubCate(c111)
 
-		#c1.printCate()
-		#c1.geneCateLines()
-		#for line in cateFormatLines:
-		#	print line
 		outpath = 'test_cate.txt'
 		print "write ",outpath
 		cate.write2file(outpath)
+		c1.printCate()
 		print "read ",outpath
 		c1.readCate(outpath)
 		c1.printCate()
