@@ -3,14 +3,15 @@
 import sys,os
 from jinja2 import Template
 from jinja2 import Environment,PackageLoader
+import ConfigParser
+from lib import const
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 usage = \
-'1: category file path \n' + \
-'2: document path \n' + \
+'1: configuration file path \n' + \
 'note: \n' + \
-'    title and author in the first two line of category file. \n ' + \
-'    documents in text format under document path.'
+'    title ,author, document path, category path are in the conf file. \n '
 
 def remkdir(input_dir):
   if os.path.exists(input_dir)==False:
@@ -39,12 +40,23 @@ pwd = sys.path[0]
 if os.path.isfile(pwd):
   pwd = os.path.dirname(pwd)
 print "current path:",pwd
-if len(sys.argv)!=3:
+if len(sys.argv)!=2:
     print usage
     sys.exit(1)
 
-cate_path = sys.argv[1]
-doc_prefix = sys.argv[2]
+conf_path = sys.argv[1]
+cf = ConfigParser.ConfigParser()
+cf.read(conf_path)
+book_name = cf.get(const.CONF_NAME,const.BOOK_NAME)
+doc_prefix = cf.get(const.CONF_NAME,const.CONTENT_PATH)
+cate_path = cf.get(const.CONF_NAME,const.CATE_PATH,cate_file)
+author = cf.get(const.CONF_NAME,const.AUTHOR)
+cf.get(const.CONF_NAME,const.DESC,'default book for testing')
+cf.get(const.CONF_NAME,const.PUB,'Red over China')
+cf.get(const.CONF_NAME,const.LANG,'zh.cn')
+
+#cate_path = sys.argv[1]
+#doc_prefix = sys.argv[2]
 out_prefix = doc_prefix + '/output'
 tmp_path = doc_prefix + '/tmp'
 
@@ -57,8 +69,8 @@ env.lstrip_blocks = True
 
 # read text file according to category file,and convert it to html
 cate_f = open(cate_path,'r')
-doc_title = cate_f.readline().strip() # read title
-author = cate_f.readline().strip() # read author
+#book_name = cate_f.readline().strip() # read title
+#author = cate_f.readline().strip() # read author
 no=0
 sections=[]
 while 1:
@@ -104,7 +116,7 @@ params={}
 params['sections']=sections[:]
 params['spine']=sections[:]
 params['files']=sections[:]
-params['title']=doc_title
+params['title']=book_name
 params['author']=author
 
 env.trim_blocks = True
@@ -125,4 +137,4 @@ out_cnt.write(cnt)
 out_cnt.close()
 
 # buildEpub
-buildEpub(pwd,tmp_path,out_prefix,doc_title)
+buildEpub(pwd,tmp_path,out_prefix,book_name)
