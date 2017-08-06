@@ -5,6 +5,28 @@
     <meta content="test id" name="dtb:uid"/>
     <meta content="0" name="dtb:totalPageCount"/>
     <meta content="0" name="dtb:maxPageNumber"/>
+{% macro printCate(cate) %}
+{% if cate.hasSub %}
+{% if cate.level > 0 %}
+    <!-- {{ cate.title }} START -->
+    <navPoint playOrder="{{ cate.orderId }}" class="navpoint-level-1">
+      <navLabel>
+        <text>{{ cate.title }}</text>
+      </navLabel>
+      <content src="{{ cate.src }}"/>
+      {% for c in cate.getSubCate() -%} {{ printCate(c) }} {%- endfor %}
+      <!-- {{ cate.title }} END -->
+    </navPoint>
+{% else %}
+{% for c in cate.getSubCate() -%} {{ printCate(c) }} {%- endfor %}
+{% endif %}
+{% else %}
+    <navPoint playOrder="{{ cate.orderId }}" class="navpoint-level-1">
+      <navLabel><text>{{ cate.title }}</text></navLabel>
+      <content src="{{ cate.src }}"/>
+    </navPoint>
+{% endif %}
+{% endmacro %}
   </head>
   <docTitle>
     <text>{{ title }}</text>
@@ -13,13 +35,6 @@
     <text>{{ author }}</text>
   </docAuthor>
   <navMap>
-  {% for i in range(sections|count) %}
-    <navPoint playOrder="{{ i + 1 }}" class="navpoint-level-1">
-      <navLabel>
-        <text>{{ sections[i].title }}</text>
-      </navLabel>
-      <content src="{{ sections[i].full }}"/>
-    </navPoint>
-   {% endfor %}
+{{ printCate(cate) }}
   </navMap>
 </ncx>

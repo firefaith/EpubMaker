@@ -1,20 +1,22 @@
 #!/usr/bin/env python2
 #coding:utf-8
 import ConfigParser
+import sys
+sys.path.append(sys.path[0]+"/../")
 from lib import const
 from lib.category import Category
 import os
 import shutil 
-
 conf_file = 'book.conf'
 cate_file = 'testbook_cate.txt'
-output_dir = 'tmp/doc'
+output_dir = 'testbook'
 
 # read configuration file
 cf = ConfigParser.ConfigParser()
-cf.read(conf_file)
+#cf.read(conf_file)
+cf.add_section(const.CONF_NAME)
 cf.set(const.CONF_NAME,const.BOOK_NAME,'TestBook')
-cf.set(const.CONF_NAME,const.CONTENT_PATH,'testbook')
+cf.set(const.CONF_NAME,const.CONTENT_PATH,output_dir)
 cf.set(const.CONF_NAME,const.CATE_PATH,cate_file)
 cf.set(const.CONF_NAME,const.AUTHOR,'firefaith')
 cf.set(const.CONF_NAME,const.DESC,'default book for testing')

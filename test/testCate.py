@@ -1,4 +1,6 @@
 #!/usr/bin/env python2
+import sys
+sys.path.append(r"../")
 from lib.category import Category
 
 c1 = Category("t1")

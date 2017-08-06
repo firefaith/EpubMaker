@@ -13,15 +13,15 @@
   </metadata>
   <manifest>
     <item id="css" href="styles/stylesheet.css" media-type="text/css"/>
-    {% for item in files %}
+    {% for item in files -%}
     <item id="{{ item.name }}" href="{{ item.full }}" media-type="{{ item.media_type }}"/>
-    {% endfor %}
+    {%- endfor %}
     <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
   </manifest>
   <spine toc="ncx">
-    {% for item in spine %}
+    {% for item in spine -%}
     <itemref idref="{{ item.name }}"/>
-    {% endfor %}
+    {%- endfor %}
   </spine>
   <guide>
   </guide>

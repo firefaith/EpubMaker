@@ -8,14 +8,19 @@ class Category:
 		self.level = level
 		self.subCategory = []
 		self.hasSub = False
-		
+		self.src = '/'	# use for template
+		self.orderId = 0	# use for template
+
 	def setTitle(self,title):
 		self.title = title
 	def setLevel(self,level):
 		self.level = level
 	def getLevel(self,level):
 		return self.level
-
+	def setSrc(self,src):
+		self.src = src
+	def setOrderId(self,oid):
+		self.orderId = oid
 	def hasSubCate(self):
 		return self.hasSub
 
