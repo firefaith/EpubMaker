@@ -12,24 +12,26 @@ jinja2
 
 ## Usage
 v1.1
-
+- 生成测试样例 generate example configuration and ebook raw files:`python test/testBuild.py`
+- 生成epub，generate epub book: `python buildEpub.py book.conf`
 - 填充配置文件，如book.conf，定义目录文件路径cate.txt 及 文本文件路径
 - cate.txt 文件的结构：tab符作为次级目录的标识，如
-
 > first level title # 第一级目录
 
 > \tsecond level title # 第二级目录
 
 > \t\tthrid level title # 第三级目录
 
-- note:
+- Note:
+基本的逻辑：
+
 读取 title in cate.txt ==> 再读取 content_path/title.txt ==> render to html
+``` shell
 list t1,t2
   t1=tuple(title,list)
 list(tuple(string,list))
 data struct: cate title,list sub cate
-
-- 
+```
 v1.0
 
 - 准备好目录文件，如 cate.txt,每一行为目录的标题
